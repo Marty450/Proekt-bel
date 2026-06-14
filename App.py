@@ -43,17 +43,16 @@ class Questions:
             case 10:
                 st.radio("Процесът на „ставане на народ“ изисква всекидневно усилие, а не е еднократен исторически акт.", list(score_map), key="q10")
 
-    def get_current_score(self):
-    total = 0
-    for i in range(1, 11):
-        key = f"q{i}"  # Търси ключове q1, q2, q3... q10
-        if key in st.session_state:
-            user_choice = st.session_state[key]
-            total += score_map[user_choice]
-        else:
-            total += 1 
-    return total
-
+def get_current_score(self):
+        total = 0
+        for i in range(1, 11):
+            key = f"q{i}"
+            if key in st.session_state:
+                user_choice = st.session_state[key]
+                total += score_map[user_choice]
+            else:
+                total += 1 
+        return total
 
 q = Questions()
 st.write(f"Въпрос {st.session_state.page} от 10")

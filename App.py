@@ -7,11 +7,14 @@ score_map = {
     "Напълно съгласен": 4,
     "Частично съгласен": 3,
     "Частично несъгласен": 2,
-    "Напълно несъгласен": 1
+    "Напълно несъгласен": 1,
 }
 
+# Инициализираме паметта за текущия въпрос
 if "page" not in st.session_state:
     st.session_state.page = 1
+
+
 class Questions:
 
     def __init__(self):
@@ -19,56 +22,61 @@ class Questions:
 
     def Question(self, num):
         n = num
-
         match n:
-
             case 1:
-                answer = st.radio("Човек се ражда индивид, но се превръща в част от народ чрез съзнателен избор.",list(score_map),key=1)
-                self.score += score_map[answer]
+                st.radio("Човек се ражда индивид, но се превръща в част от народ чрез съзнателен избор.", list(score_map), key="q1")
             case 2:
-                answer = st.radio("Познаването на родовата история е задължително условие за силно самосъзнание.",list(score_map),key=2)
-                self.score += score_map[answer]
+                st.radio("Познаването на родовата история е задължително условие за силно самосъзнание.", list(score_map), key="q2")
             case 3:
-                answer = st.radio("Един народ съществува само докато пази живи своите традиции и обичаи.",list(score_map),key=3)
-                self.score += score_map[answer]
+                st.radio("Един народ съществува само докато пази живи своите традиции и обичаи.", list(score_map), key="q3")
             case 4:
-                answer = st.radio("Споделената болка от исторически несправедливости обединява хората повече от успеха.",list(score_map),key=4)
-                self.score += score_map[answer]
+                st.radio("Споделената болка от исторически несправедливости обединява хората повече от успеха.", list(score_map), key="q4")
             case 5:
-                answer = st.radio("Без обща ценностна система една група хора е просто население, а не народ.",list(score_map),key=5)
-                self.score += score_map[answer]
+                st.radio("Без обща ценностна система една група хора е просто население, а не народ.", list(score_map), key="q5")
             case 6:
-                answer = st.radio("Националното самосъзнание е пречка пред развитието на модерния, глобален човек.",list(score_map),key=6)
-                self.score += score_map[answer]
+                st.radio("Националното самосъзнание е пречка пред развитието на модерния, globalен човек.", list(score_map), key="q6")
             case 7:
-                answer = st.radio("Чувствам се лично отговорен за бъдещето на моя народ.",list(score_map),key=7)
-                self.score += score_map[answer]
+                st.radio("Чувствам се лично отговорен за бъдещето на моя народ.", list(score_map), key="q7")
             case 8:
-                answer = st.radio("Общата визия за бъдещето е по-важна за един народ от общото му минало.",list(score_map),key=8)
-                self.score += score_map[answer]
+                st.radio("Общата визия за бъдещето е по-важна за един народ от общото му минало.", list(score_map), key="q8")
             case 9:
-                answer = st.radio("Чувствам се по-близък с хора, които споделят моите интереси, отколкото с тези от моята националност.",list(score_map),key=9)
-                self.score += score_map[answer]
+                st.radio("Чувствам се по-близък с хора, които споделят моите интереси, отколкото с тези от моята националност.", list(score_map), key="q9")
             case 10:
-                answer = st.radio("Процесът на „ставане на народ“ изисква всекидневно усилие, а не е еднократен исторически акт.",list(score_map),key=10)
-                self.score += score_map[answer]
+                st.radio("Процесът на „ставане на народ“ изисква всекидневно усилие, а не е еднократен исторически акт.", list(score_map), key="q10")
+
+    def get_current_score(self):
+        # Автоматично събира точките от всички отговорени до момента въпроси
+        total = 0
+        for i in range(1, 11):
+            key = f"q{i}"
+            if key in st.session_state:
+                user_choice = st.session_state[key]
+                total += score_map[user_choice]
+        return total
+
 
 q = Questions()
-st.write(f"Въпрос {st.session_state.page} от 10")
+
+# Показваме текущия въпрос
+st.write(f"### Въпрос {st.session_state.page} от 10")
 q.Question(st.session_state.page)
 
+# Навигация с бутони
 col1, col2 = st.columns(2)
+
 with col1:
     if st.session_state.page > 1:
         if st.button("Предишен въпрос"):
             st.session_state.page -= 1
             st.rerun()
+
 with col2:
     if st.session_state.page < 10:
         if st.button("Следващ въпрос"):
             st.session_state.page += 1
             st.rerun()
 
+# СИСТЕМА ЗА ОЦЕНЯВАНЕ И РЕЗУЛТАТИ
 st.divider()
 total_points = q.get_current_score()
 

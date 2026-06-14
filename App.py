@@ -10,7 +10,6 @@ score_map = {
     "Напълно несъгласен": 1,
 }
 
-# Инициализираме паметта за текущия въпрос
 if "page" not in st.session_state:
     st.session_state.page = 1
 
@@ -45,61 +44,48 @@ class Questions:
                 st.radio("Процесът на „ставане на народ“ изисква всекидневно усилие, а не е еднократен исторически акт.", list(score_map), key="q10")
 
     def get_current_score(self):
-        # Автоматично събира точките от всички отговорени до момента въпроси
-        total = 0
-        for i in range(1, 11):
-            key = f"q{i}"
-            if key in st.session_state:
-                user_choice = st.session_state[key]
-                total += score_map[user_choice]
-        return total
+    total = 0
+    for i in range(1, 11):
+        key = f"q{i}"  # Търси ключове q1, q2, q3... q10
+        if key in st.session_state:
+            user_choice = st.session_state[key]
+            total += score_map[user_choice]
+        else:
+            total += 1 
+    return total
 
 
 q = Questions()
-
-# Показваме текущия въпрос
-st.write(f"### Въпрос {st.session_state.page} от 10")
+st.write(f"Въпрос {st.session_state.page} от 10")
 q.Question(st.session_state.page)
-
-# Навигация с бутони
 col1, col2 = st.columns(2)
-
 with col1:
     if st.session_state.page > 1:
         if st.button("Предишен въпрос"):
             st.session_state.page -= 1
             st.rerun()
-
 with col2:
     if st.session_state.page < 10:
         if st.button("Следващ въпрос"):
             st.session_state.page += 1
             st.rerun()
-
-# СИСТЕМА ЗА ОЦЕНЯВАНЕ И РЕЗУЛТАТИ
 st.divider()
 total_points = q.get_current_score()
 
 if st.session_state.page == 10:
-    st.subheader(f"Вашият краен резултат: {total_points} точки")
-    
-    # Проверка на скалата и извеждане на съответния коментар и съвет
+    st.subheader(f"Вашият краен резултат: {total_points} точки")    
     if 10 <= total_points <= 19:
         st.error("**Резултат:** Далеч от идеята за истинска общност.")
         st.info("**Съвет:** Започни да слушаш, уважаваш и помагаш на другите.")
-        
     elif 20 <= total_points <= 24:
         st.warning("**Резултат:** Показва първи стъпки към общностните ценности.")
-        st.info("**Съвет:** Участвай по-често в общи дейности и инициативи.")
-        
+        st.info("**Съвет:** Участвай по-често в общи дейности и инициативи.")    
     elif 25 <= total_points <= 29:
         st.info("**Резултат:** Разбира значението на единството и взаимопомощта.")
         st.info("**Съвет:** Развивай чувство за отговорност към общността.")
-        
     elif 30 <= total_points <= 35:
         st.success("**Резултат:** Близо до ценностите на сплотения народ.")
         st.info("**Съвет:** Бъди пример за единство, уважение и солидарност.")
-        
     elif 36 <= total_points <= 40:
         st.success("**Резултат:** Отличен пример за гражданска отговорност и единство.")
         st.info("**Съвет:** Продължавай да обединяваш хората и да вдъхновяваш.")

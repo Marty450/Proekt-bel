@@ -50,7 +50,7 @@ class Questions:
             case 5:
                 st.radio("Без обща ценностна система една група хора е просто население, а не народ.", options, index=default_idx, key="q5", on_change=self.save_choice, args=(5,))
             case 6:
-                st.radio("Националното самосъзнание е пречка перед развитието на модерния, глобален човек.", options, index=default_idx, key="q6", on_change=self.save_choice, args=(6,))
+                st.radio("Националното самосъзнание е пречка пред развитието на модерния, глобален човек.", options, index=default_idx, key="q6", on_change=self.save_choice, args=(6,))
             case 7:
                 st.radio("Чувствам се лично отговорен за бъдещето на моя народ.", options, index=default_idx, key="q7", on_change=self.save_choice, args=(7,))
             case 8:
